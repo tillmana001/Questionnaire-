@@ -25,7 +25,7 @@ function scoreMe() {
     continuousLearning: ["question3", "question7", "question13", "question19", "question24", "question27", "question34"],
     communication: ["question2", "question12", "question16", "question21", "question31", "question38", "question39"],
     integrity: ["question15", "question20", "question30", "question37"],
-    reliability: ["question4", "question9", "question18", "question25", "question29", "question32"],
+    reliability: ["question4", "question9", "question18", "question25", "question29", "question32", "question40", "question35"],
     teamwork: ["question5", "question10", "question14", "question17", "question23", "question28", "question36"],
   };
 
