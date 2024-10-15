@@ -1,14 +1,8 @@
-const score = document.getElementById("score");
 const button = document.getElementById("submit");
 
 button.addEventListener("click", scoreMe);
 
-function tryMe(){
-  score.innerText = "hello"
-}
-
-
-function scoreMe() {
+async function scoreMe() {
   const form = document.getElementById("ruskin");
 
   let results = {
@@ -29,6 +23,7 @@ function scoreMe() {
     teamwork: ["question5", "question10", "question14", "question17", "question23", "question28", "question36"],
   };
 
+  // Calculate scores
   for (let value in questionValues) {
     questionValues[value].forEach((question) => {
       const answer = form.querySelector(`input[name="${question}"]:checked`);
@@ -38,11 +33,25 @@ function scoreMe() {
     });
   }
 
-  score.innerText = `
-    Attention to Detail Score: ${results.attentionToDetail} 
-    Continuous Learning Score: ${results.continuousLearning} 
-    Communication Score: ${results.communication} 
-    Integrity Score: ${results.integrity} 
-    Reliability Score: ${results.reliability} 
-    Teamwork Score: ${results.teamwork}`;
+  // Send scores to the server
+  try {
+    const response = await fetch('/send', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(results), // Send the scores as JSON
+    });
+
+    if (response.ok) {
+      // Show thank you message to the candidate
+      alert('Thank you for taking our questionnaire. Your response has been submitted.');
+      form.reset(); // Optional: reset the form after submission
+    } else {
+      alert('Failed to submit scores.');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('An error occurred while submitting the scores.');
+  }
 }

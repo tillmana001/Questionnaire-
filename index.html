@@ -7,7 +7,7 @@
   <title>Ruskin Questionnaire</title>
 </head>
 <body>
-  <form id="ruskin">
+  <form id="ruskin" action="/submit-form" method="POST">
     <header>
     <h1>Questionnaire</h1>
     </header>
@@ -15,6 +15,12 @@
     <br>
     <legend>Please read each statement carefully. Select the answer that best reflects your thoughts and experiences.</legend>
   <br>
+  <fieldset>
+    <label>Name: </label><input type="text" id="name" required>
+    <br>
+    <label>Email: </label><input type="email" id="email" required>
+    <br>
+  </fieldset>
   <fieldset>
     <div>
       <p>When I work on a task, I plan and organize my time to ensure all steps are completed efficiently.</p>
@@ -619,6 +625,6 @@
       <button id="submit" type="button"  name="submit">Submit</button>
       <div id="score"></div>
 </form>
-<script src="./script.js"></script>
+<script src="script.js" defer></script>
 </body>
 </html>
