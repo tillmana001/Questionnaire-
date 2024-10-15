@@ -1,1 +1,5 @@
-external-files/.env
+# Ignore node_modules
+node_modules/
+
+# Ignore .env file containing sensitive data
+.env
