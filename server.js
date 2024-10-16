@@ -13,12 +13,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
 
-// Serve static files from the 'Project' directory
-app.use(express.static(path.join(__dirname, 'Project')));
+// Serve static files from the current directory
+app.use(express.static(__dirname));
 
-// Serve index.html when accessing the root URL
+// Serve index.html when accessing the root URL with error handling
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'Project', 'index.html'));
+  res.sendFile(path.join(__dirname, 'index.html'), (err) => {
+    if (err) {
+      console.error('Error sending file:', err);
+      res.status(err.status).end();
+    }
+  });
 });
 
 // Health check endpoint
