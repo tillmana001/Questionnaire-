@@ -6,7 +6,10 @@
     "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["questionnaire", "survey"],
+  "keywords": [
+    "questionnaire",
+    "survey"
+  ],
   "author": "Allison Tillman",
   "license": "ISC",
   "description": "A questionnaire application.",
@@ -21,4 +24,3 @@
     "node": ">=14.x"
   }
 }
-
