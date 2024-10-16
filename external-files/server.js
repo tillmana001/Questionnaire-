@@ -21,6 +21,11 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'Project', 'index.html'));
 });
 
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
+
 // Nodemailer setup
 const transporter = nodemailer.createTransport({
   service: 'gmail',
