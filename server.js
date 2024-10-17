@@ -43,6 +43,7 @@ const transporter = nodemailer.createTransport({
 // Route to handle form submission
 app.post('/send', (req, res) => {
   const scores = req.body; // Assuming the front-end sends a JSON object with scores
+  const { userName } = scores;
   console.log('Received scores:', scores); // Log incoming scores
 
   // Email options
