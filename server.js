@@ -50,7 +50,7 @@ app.post('/send', (req, res) => {
     from: process.env.GMAIL_USER, // Use environment variable
     to: process.env.GMAIL_USER, // Use environment variable
     subject: 'New Survey Response',
-    text: `Scores: ${JSON.stringify(scores, null, 2)}`
+    text: `New response from ${userName}:\n\nScores: ${JSON.stringify(scores, null, 2)}`
   };
 
   // Send email using Nodemailer
