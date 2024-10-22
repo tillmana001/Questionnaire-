@@ -26,6 +26,10 @@ app.get('/', (req, res) => {
   });
 });
 
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
+
 // Function to write results to an Excel file
 async function writeResultsToExcel(scores) {
   const workbook = new ExcelJS.Workbook();
