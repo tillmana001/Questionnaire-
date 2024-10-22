@@ -2,11 +2,11 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
-const ExcelJS = require('exceljs'); // Import ExcelJS
+const { google } = require('googleapis'); // Import googleapis
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 10000; // Use the PORT variable from the environment
+const PORT = process.env.PORT || 10000;
 
 // Middleware to handle form data and allow cross-origin requests
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -30,45 +30,43 @@ app.get('/health', (req, res) => {
   res.status(200).send('OK');
 });
 
-// Function to write results to an Excel file
-async function writeResultsToExcel(scores) {
-  const workbook = new ExcelJS.Workbook();
-  const filePath = 'SurveyResults.xlsx';
+// Function to write results to Google Sheets
+async function writeResultsToGoogleSheets(scores) {
+  const sheets = google.sheets('v4');
   
-  let sheet;
-  if (require('fs').existsSync(filePath)) {
-    // If the file already exists, load it
-    await workbook.xlsx.readFile(filePath);
-    sheet = workbook.getWorksheet('Survey Results');
-  } else {
-    // Add a new sheet and column headers
-    sheet = workbook.addWorksheet('Survey Results');
-    sheet.columns = [
-      { header: 'User Name', key: 'userName' },
-      { header: 'Attention to Detail', key: 'attentionToDetail' },
-      { header: 'Continuous Learning', key: 'continuousLearning' },
-      { header: 'Communication', key: 'communication' },
-      { header: 'Integrity', key: 'integrity' },
-      { header: 'Reliability', key: 'reliability' },
-      { header: 'Teamwork', key: 'teamwork' },
-      { header: 'Answers', key: 'answers' }
-    ];
-  }
+  // Decode the Base64 credentials
+  const credentials = Buffer.from(process.env.GOOGLE_CREDENTIALS_BASE64, 'base64').toString('utf-8');
 
-  // Add a row with the scores
-  await sheet.addRow({
-    userName: scores.userName,
-    attentionToDetail: scores.attentionToDetail,
-    continuousLearning: scores.continuousLearning,
-    communication: scores.communication,
-    integrity: scores.integrity,
-    reliability: scores.reliability,
-    teamwork: scores.teamwork,
-    answers: JSON.stringify(scores.answers) // Convert individual answers to a string
+  const auth = new google.auth.GoogleAuth({
+    credentials: JSON.parse(credentials), // Parse the decoded JSON
+    scopes: ['https://www.googleapis.com/auth/spreadsheets'], // Required scopes
   });
 
-  // Save the workbook
-  await workbook.xlsx.writeFile(filePath);
+  const client = await auth.getClient();
+  const spreadsheetId = '1c5MQAB4rhbH4eBdajDlqucZIXd5U_4Zqxlqyj7V1Dbo'; // Replace with your Google Sheets ID
+
+  // Prepare the row data
+  const row = [
+    scores.userName,
+    scores.attentionToDetail,
+    scores.continuousLearning,
+    scores.communication,
+    scores.integrity,
+    scores.reliability,
+    scores.teamwork,
+    JSON.stringify(scores.answers), // Convert individual answers to a string
+  ];
+
+  // Add a new row to the sheet
+  await sheets.spreadsheets.values.append({
+    auth,
+    spreadsheetId,
+    range: 'Sheet1!A:H', // Update with your target sheet and range
+    valueInputOption: 'RAW',
+    resource: {
+      values: [row], // Array of rows to be added
+    },
+  });
 }
 
 // Route to handle form submission
@@ -76,13 +74,13 @@ app.post('/send', async (req, res) => {
   const scores = req.body;
   console.log('Received scores:', scores);
 
-  // Write results to Excel
+  // Write results to Google Sheets
   try {
-    await writeResultsToExcel(scores);
+    await writeResultsToGoogleSheets(scores);
     res.status(200).send('Survey results saved successfully');
   } catch (error) {
-    console.error('Error writing to Excel:', error);
-    res.status(500).send('Error saving to Excel');
+    console.error('Error writing to Google Sheets:', error);
+    res.status(500).send('Error saving to Google Sheets');
   }
 });
 
