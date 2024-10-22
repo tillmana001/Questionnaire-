@@ -6,7 +6,7 @@ const ExcelJS = require('exceljs'); // Import ExcelJS
 require('dotenv').config();
 
 const app = express();
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000; // Use the PORT variable from the environment
 
 // Middleware to handle form data and allow cross-origin requests
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -29,16 +29,16 @@ app.get('/', (req, res) => {
 // Function to write results to an Excel file
 async function writeResultsToExcel(scores) {
   const workbook = new ExcelJS.Workbook();
-  const sheet = workbook.addWorksheet('Survey Results');
-
-  // Add column headers if this is the first entry
   const filePath = 'SurveyResults.xlsx';
+  
+  let sheet;
   if (require('fs').existsSync(filePath)) {
     // If the file already exists, load it
     await workbook.xlsx.readFile(filePath);
     sheet = workbook.getWorksheet('Survey Results');
   } else {
-    // Add column headers
+    // Add a new sheet and column headers
+    sheet = workbook.addWorksheet('Survey Results');
     sheet.columns = [
       { header: 'User Name', key: 'userName' },
       { header: 'Attention to Detail', key: 'attentionToDetail' },
@@ -70,7 +70,6 @@ async function writeResultsToExcel(scores) {
 // Route to handle form submission
 app.post('/send', async (req, res) => {
   const scores = req.body;
-  const { userName } = scores;
   console.log('Received scores:', scores);
 
   // Write results to Excel
@@ -84,6 +83,6 @@ app.post('/send', async (req, res) => {
 });
 
 // Start the server
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
 });
