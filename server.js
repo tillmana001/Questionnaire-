@@ -1,9 +1,9 @@
 const express = require('express');
-const nodemailer = require('nodemailer');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
-require('dotenv').config(); // Import dotenv for environment variables
+const ExcelJS = require('exceljs'); // Import ExcelJS
+require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -26,44 +26,61 @@ app.get('/', (req, res) => {
   });
 });
 
-// Health check endpoint
-app.get('/health', (req, res) => {
-  res.status(200).send('OK');
-});
+// Function to write results to an Excel file
+async function writeResultsToExcel(scores) {
+  const workbook = new ExcelJS.Workbook();
+  const sheet = workbook.addWorksheet('Survey Results');
 
-// Nodemailer setup
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.GMAIL_USER, // Replace with your Gmail address
-    pass: process.env.GMAIL_PASS // Replace with your Gmail app password
+  // Add column headers if this is the first entry
+  const filePath = 'SurveyResults.xlsx';
+  if (require('fs').existsSync(filePath)) {
+    // If the file already exists, load it
+    await workbook.xlsx.readFile(filePath);
+    sheet = workbook.getWorksheet('Survey Results');
+  } else {
+    // Add column headers
+    sheet.columns = [
+      { header: 'User Name', key: 'userName' },
+      { header: 'Attention to Detail', key: 'attentionToDetail' },
+      { header: 'Continuous Learning', key: 'continuousLearning' },
+      { header: 'Communication', key: 'communication' },
+      { header: 'Integrity', key: 'integrity' },
+      { header: 'Reliability', key: 'reliability' },
+      { header: 'Teamwork', key: 'teamwork' },
+      { header: 'Answers', key: 'answers' }
+    ];
   }
-});
+
+  // Add a row with the scores
+  await sheet.addRow({
+    userName: scores.userName,
+    attentionToDetail: scores.attentionToDetail,
+    continuousLearning: scores.continuousLearning,
+    communication: scores.communication,
+    integrity: scores.integrity,
+    reliability: scores.reliability,
+    teamwork: scores.teamwork,
+    answers: JSON.stringify(scores.answers) // Convert individual answers to a string
+  });
+
+  // Save the workbook
+  await workbook.xlsx.writeFile(filePath);
+}
 
 // Route to handle form submission
-app.post('/send', (req, res) => {
-  const scores = req.body; // Assuming the front-end sends a JSON object with scores
+app.post('/send', async (req, res) => {
+  const scores = req.body;
   const { userName } = scores;
-  console.log('Received scores:', scores); // Log incoming scores
+  console.log('Received scores:', scores);
 
-  // Email options
-  const mailOptions = {
-    from: process.env.GMAIL_USER, // Use environment variable
-    to: process.env.GMAIL_USER, // Use environment variable
-    subject: 'New Survey Response',
-    text: `New response from ${userName}:\n\nScores: ${JSON.stringify(scores, null, 2)}`
-  };
-
-  // Send email using Nodemailer
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log('Error sending email:', error);
-      res.status(500).send('Error sending email');
-    } else {
-      console.log('Email sent: ' + info.response);
-      res.status(200).send('Email sent successfully');
-    }
-  });
+  // Write results to Excel
+  try {
+    await writeResultsToExcel(scores);
+    res.status(200).send('Survey results saved successfully');
+  } catch (error) {
+    console.error('Error writing to Excel:', error);
+    res.status(500).send('Error saving to Excel');
+  }
 });
 
 // Start the server

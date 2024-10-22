@@ -6,27 +6,38 @@ async function scoreMe() {
   const form = document.getElementById("ruskin");
 
   const questionGroups = [
-    "question1", "question2", "question3", "question4", "question5", "question6", "question7", "question8", "question9", "question10", 
-    "question11", "question12", "question13", "question14", "question15", "question16", "question17", "question18", "question19", 
-    "question20", "question21", "question22", "question23", "question24", "question25", "question26", "question27", "question28", 
-    "question29", "question30", "question31", "question32", "question33", "question34", "question35", "question36", "question37", 
-    "question38", "question39", "question40"
+    "question1", "question2", "question3", "question4", "question5", 
+    "question6", "question7", "question8", "question9", "question10", 
+    "question11", "question12", "question13", "question14", "question15", 
+    "question16", "question17", "question18", "question19", "question20", 
+    "question21", "question22", "question23", "question24", "question25", 
+    "question26", "question27", "question28", "question29", "question30", 
+    "question31", "question32", "question33", "question34", "question35", 
+    "question36", "question37", "question38", "question39", "question40"
   ];
 
   let allAnswered = true;
 
+  let individualAnswers = {}; // Object to store individual answers
+
+  // Check if all questions are answered and collect answers
   questionGroups.forEach((question) => {
     const selectedAnswer = form.querySelector(`input[name="${question}"]:checked`);
     if (!selectedAnswer) {
-      allAnswered = false;
+      allAnswered = false; // Mark as false if any question is unanswered
+    } else {
+      // Store the individual answer in the answers object
+      individualAnswers[question] = selectedAnswer.value;
     }
   });
 
+  // Alert if not all questions are answered
   if (!allAnswered) {
     alert('Please answer all questions before submitting.');
     return;
   }
 
+  // Initialize results object
   let results = {
     userName: document.getElementById("name").value, // Ensure this matches your HTML ID for the user's name input
     attentionToDetail: 0,
@@ -35,8 +46,10 @@ async function scoreMe() {
     integrity: 0,
     reliability: 0,
     teamwork: 0,
+    answers: individualAnswers // Add individual answers to the results object
   };
 
+  // Mapping of question groups to their respective scores
   const questionValues = {
     attentionToDetail: ["question1", "question6", "question8", "question11", "question22", "question26", "question33"],
     continuousLearning: ["question3", "question7", "question13", "question19", "question24", "question27", "question34"],
@@ -46,12 +59,12 @@ async function scoreMe() {
     teamwork: ["question5", "question10", "question14", "question17", "question23", "question28", "question36"],
   };
 
-  // Calculate scores
+  // Calculate scores based on selected answers
   for (let value in questionValues) {
     questionValues[value].forEach((question) => {
       const answer = form.querySelector(`input[name="${question}"]:checked`);
       if (answer) {
-        results[value] += parseInt(answer.value);
+        results[value] += parseInt(answer.value); // Add the answer value to the corresponding score
       }
     });
   }
@@ -63,7 +76,7 @@ async function scoreMe() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(results), // Send the scores as JSON
+      body: JSON.stringify(results), // Send the scores as JSON, including individual answers
     });
 
     if (response.ok) {
@@ -71,11 +84,11 @@ async function scoreMe() {
       alert('Thank you for taking our questionnaire. Your response has been submitted.');
       form.reset(); // Optional: reset the form after submission
     } else {
-      alert('Failed to submit scores.');
+      alert('Failed to submit scores. Please try again.');
     }
   } catch (error) {
     console.error('Error:', error);
-    alert('An error occurred while submitting the scores.');
+    alert('An error occurred while submitting the scores. Please try again.');
   }
 }
 
