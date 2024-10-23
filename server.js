@@ -33,77 +33,83 @@ app.get('/health', (req, res) => {
 // Function to write results to Google Sheets
 async function writeResultsToGoogleSheets(scores) {
   const sheets = google.sheets('v4');
-  
-  // Decode the Base64 credentials
   const credentials = Buffer.from(process.env.GOOGLE_CREDENTIALS_BASE64, 'base64').toString('utf-8');
-
+  
   const auth = new google.auth.GoogleAuth({
-    credentials: JSON.parse(credentials), // Parse the decoded JSON
-    scopes: ['https://www.googleapis.com/auth/spreadsheets'], // Required scopes
+    credentials: JSON.parse(credentials),
+    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
   });
 
   const client = await auth.getClient();
-  const spreadsheetId = '1c5MQAB4rhbH4eBdajDlqucZIXd5U_4Zqxlqyj7V1Dbo'; // Replace with your Google Sheets ID
+  const spreadsheetId = '1c5MQAB4rhbH4eBdajDlqucZIXd5U_4Zqxlqyj7V1Dbo';
+
+  // Dynamically get the first sheet name
+  const sheetInfo = await sheets.spreadsheets.get({
+    auth,
+    spreadsheetId,
+  });
+  
+  const firstSheet = sheetInfo.data.sheets[0].properties.title;
 
   // Prepare the row data, splitting out the individual question answers into separate columns
   const row = [
     scores.userName,
-    scores.attentionToDetail,
-    scores.continuousLearning,
-    scores.communication,
-    scores.integrity,
-    scores.reliability,
-    scores.teamwork,
-    scores.answers.question1,
-    scores.answers.question2,
-    scores.answers.question3,
-    scores.answers.question4,
-    scores.answers.question5,
-    scores.answers.question6,
-    scores.answers.question7,
-    scores.answers.question8,
-    scores.answers.question9,
-    scores.answers.question10,
-    scores.answers.question11,
-    scores.answers.question12,
-    scores.answers.question13,
-    scores.answers.question14,
-    scores.answers.question15,
-    scores.answers.question16,
-    scores.answers.question17,
-    scores.answers.question18,
-    scores.answers.question19,
-    scores.answers.question20,
-    scores.answers.question21,
-    scores.answers.question22,
-    scores.answers.question23,
-    scores.answers.question24,
-    scores.answers.question25,
-    scores.answers.question26,
-    scores.answers.question27,
-    scores.answers.question28,
-    scores.answers.question29,
-    scores.answers.question30,
-    scores.answers.question31,
-    scores.answers.question32,
-    scores.answers.question33,
-    scores.answers.question34,
-    scores.answers.question35,
-    scores.answers.question36,
-    scores.answers.question37,
-    scores.answers.question38,
-    scores.answers.question39,
-    scores.answers.question40,
+    Number(scores.attentionToDetail),
+    Number(scores.continuousLearning),
+    Number(scores.communication),
+    Number(scores.integrity),
+    Number(scores.reliability),
+    Number(scores.teamwork),
+    Number(scores.answers.question1),
+    Number(scores.answers.question2),
+    Number(scores.answers.question3),
+    Number(scores.answers.question4),
+    Number(scores.answers.question5),
+    Number(scores.answers.question6),
+    Number(scores.answers.question7),
+    Number(scores.answers.question8),
+    Number(scores.answers.question9),
+    Number(scores.answers.question10),
+    Number(scores.answers.question11),
+    Number(scores.answers.question12),
+    Number(scores.answers.question13),
+    Number(scores.answers.question14),
+    Number(scores.answers.question15),
+    Number(scores.answers.question16),
+    Number(scores.answers.question17),
+    Number(scores.answers.question18),
+    Number(scores.answers.question19),
+    Number(scores.answers.question20),
+    Number(scores.answers.question21),
+    Number(scores.answers.question22),
+    Number(scores.answers.question23),
+    Number(scores.answers.question24),
+    Number(scores.answers.question25),
+    Number(scores.answers.question26),
+    Number(scores.answers.question27),
+    Number(scores.answers.question28),
+    Number(scores.answers.question29),
+    Number(scores.answers.question30),
+    Number(scores.answers.question31),
+    Number(scores.answers.question32),
+    Number(scores.answers.question33),
+    Number(scores.answers.question34),
+    Number(scores.answers.question35),
+    Number(scores.answers.question36),
+    Number(scores.answers.question37),
+    Number(scores.answers.question38),
+    Number(scores.answers.question39),
+    Number(scores.answers.question40),
   ];
 
   // Add a new row to the sheet
   await sheets.spreadsheets.values.append({
     auth,
     spreadsheetId,
-    range: 'Sheet1!A:AR', // Update the range to fit all columns (A:AR fits up to 44 columns)
+    range: `${firstSheet}!A:H`, // Dynamically use the first sheet name
     valueInputOption: 'RAW',
     resource: {
-      values: [row], // Array of rows to be added
+      values: [row],
     },
   });
 }
