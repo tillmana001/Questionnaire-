@@ -33,15 +33,19 @@ app.get('/health', (req, res) => {
 // Function to write results to Google Sheets
 async function writeResultsToGoogleSheets(scores) {
   const sheets = google.sheets('v4');
+  
+  // Decode the Base64 credentials
+  const credentials = Buffer.from(process.env.GOOGLE_CREDENTIALS_BASE64, 'base64').toString('utf-8');
+
   const auth = new google.auth.GoogleAuth({
-    keyFile: 'path/to/your/credentials.json', // Update the path to your credentials file
+    credentials: JSON.parse(credentials), // Parse the decoded JSON
     scopes: ['https://www.googleapis.com/auth/spreadsheets'], // Required scopes
   });
 
   const client = await auth.getClient();
-  const spreadsheetId = 'your-google-sheets-id'; // Replace with your Google Sheets ID
+  const spreadsheetId = '1c5MQAB4rhbH4eBdajDlqucZIXd5U_4Zqxlqyj7V1Dbo'; // Replace with your Google Sheets ID
 
-  // Prepare the row data, adding each question score to a new column
+  // Prepare the row data, splitting out the individual question answers into separate columns
   const row = [
     scores.userName,
     scores.attentionToDetail,
@@ -96,7 +100,7 @@ async function writeResultsToGoogleSheets(scores) {
   await sheets.spreadsheets.values.append({
     auth,
     spreadsheetId,
-    range: 'Sheet1!A:AR', // Adjust range to fit all columns (A:AR fits up to 44 columns)
+    range: 'Sheet1!A:AR', // Update the range to fit all columns (A:AR fits up to 44 columns)
     valueInputOption: 'RAW',
     resource: {
       values: [row], // Array of rows to be added
@@ -123,3 +127,4 @@ app.post('/send', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
+
