@@ -64,7 +64,7 @@ async function scoreMe() {
     questionValues[value].forEach((question) => {
       const answer = form.querySelector(`input[name="${question}"]:checked`);
       if (answer) {
-        results[value] += parseInt(answer.value); // Add the answer value to the corresponding score
+        results[value] += parseFloat(answer.value); // Add the answer value to the corresponding score
       }
     });
   }
