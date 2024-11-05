@@ -1,3 +1,5 @@
+let startTime = Date.now();
+
 const button = document.getElementById("submit");
 
 button.addEventListener("click", scoreMe);
@@ -68,7 +70,8 @@ async function scoreMe() {
       }
     });
   }
-
+  const endTime = Date.now();
+  const duration = Math.floor((endTime - startTime) / 1000); 
   // Send scores to the server
   try {
     const response = await fetch('/send', {
