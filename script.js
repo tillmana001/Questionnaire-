@@ -71,7 +71,7 @@ async function scoreMe() {
     });
   }
   const endTime = Date.now();
-  const duration = Math.floor((endTime - startTime) / 1000); 
+  const duration = Math.floor((endTime - startTime) / 1000 / 60).toFixed(2); 
 
   results.duration = duration;
   // Send scores to the server
