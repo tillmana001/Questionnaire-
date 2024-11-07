@@ -101,6 +101,12 @@ async function writeResultsToGoogleSheets(scores) {
     Number(scores.answers.question38),
     Number(scores.answers.question39),
     Number(scores.answers.question40),
+    Number(scores.answers.question41),
+    Number(scores.answers.question42),
+    Number(scores.answers.question43),
+    Number(scores.answers.question44),
+    Number(scores.answers.question45),
+    Number(scores.answers.question46),
   ];
 
   // Add a new row to the sheet

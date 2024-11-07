@@ -53,12 +53,12 @@ async function scoreMe() {
 
   // Mapping of question groups to their respective scores
   const questionValues = {
-    attentionToDetail: ["question1", "question6", "question8", "question11", "question22", "question26", "question33"],
-    continuousLearning: ["question3", "question7", "question13", "question19", "question24", "question27", "question34"],
-    communication: ["question2", "question12", "question16", "question21", "question31", "question38", "question39"],
-    integrity: ["question15", "question20", "question30", "question37"],
-    reliability: ["question4", "question9", "question18", "question25", "question29", "question32", "question40", "question35"],
-    teamwork: ["question5", "question10", "question14", "question17", "question23", "question28", "question36"],
+    attentionToDetail: ["question1", "question6", "question8", "question11", "question22", "question26", "question33", "question41"],
+    continuousLearning: ["question3", "question7", "question13", "question19", "question24", "question27", "question34", "question42"],
+    communication: ["question2", "question12", "question16", "question21", "question31", "question38", "question39", "question43"],
+    integrity: ["question15", "question20", "question30", "question37", "question44"],
+    reliability: ["question4", "question9", "question18", "question25", "question29", "question32", "question35", "question40", "question45"],
+    teamwork: ["question5", "question10", "question14", "question17", "question23", "question28", "question36", "question46"],
   };
 
   // Calculate scores based on selected answers
