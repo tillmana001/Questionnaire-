@@ -15,7 +15,9 @@ async function scoreMe() {
     "question21", "question22", "question23", "question24", "question25", 
     "question26", "question27", "question28", "question29", "question30", 
     "question31", "question32", "question33", "question34", "question35", 
-    "question36", "question37", "question38", "question39", "question40"
+    "question36", "question37", "question38", "question39", "question40",
+    "question41","question42", "question43", "question44", "question45",
+    "question46",
   ];
 
   let allAnswered = true;
