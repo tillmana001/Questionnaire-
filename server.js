@@ -2,9 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
-const { google } = require('googleapis'); // Import googleapis
-require('dotenv').config();
+const { google } = require('googleapis');
 
+// Initialize Express app and port
 const app = express();
 const PORT = process.env.PORT || 10000;
 
@@ -33,6 +33,8 @@ app.get('/health', (req, res) => {
 // Function to write results to Google Sheets
 async function writeResultsToGoogleSheets(scores) {
   const sheets = google.sheets('v4');
+
+  // Get credentials from environment variable
   const credentials = Buffer.from(process.env.GOOGLE_CREDENTIALS_BASE64, 'base64').toString('utf-8');
   
   const auth = new google.auth.GoogleAuth({
@@ -41,7 +43,9 @@ async function writeResultsToGoogleSheets(scores) {
   });
 
   const client = await auth.getClient();
-  const spreadsheetId = '1c5MQAB4rhbH4eBdajDlqucZIXd5U_4Zqxlqyj7V1Dbo';
+
+  // Access the spreadsheet ID from an environment variable (if configured)
+  const spreadsheetId = process.env.SPREADSHEET_ID;
 
   // Dynamically get the first sheet name
   const sheetInfo = await sheets.spreadsheets.get({
