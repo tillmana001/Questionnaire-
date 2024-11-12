@@ -54,6 +54,8 @@ async function writeResultsToGoogleSheets(scores) {
   });
   
   const firstSheet = sheetInfo.data.sheets[0].properties.title;
+  const submissionDate = new Date(); // Current date
+  const formattedDate = Utilities.formatDate(submissionDate, Session.getScriptTimeZone(), 'MM-dd-yy'); // Adjust the format as needed
 
   // Prepare the row data, splitting out the individual question answers into separate columns
   const row = [
