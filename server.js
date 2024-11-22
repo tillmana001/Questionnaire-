@@ -54,10 +54,15 @@ async function writeResultsToGoogleSheets(scores) {
   });
   
   const firstSheet = sheetInfo.data.sheets[0].properties.title;
+  const currentDate = new Date();
+
+  // Format the date as YYYY-MM-DD
+  const formattedDate = currentDate.toISOString().split("T")[0];
+
 
   // Prepare the row data, splitting out the individual question answers into separate columns
   const row = [
-    new Date().toLocaleString("en-US", { timeZone: "America/Chicago" }),
+    formattedDate,
     scores.userName,
     scores.duration,
     Number(scores.attentionToDetail),
