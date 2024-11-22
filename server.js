@@ -59,12 +59,12 @@ async function writeResultsToGoogleSheets(scores) {
   // Extract the date part (MM/DD/YYYY) and split it
   const [month, day, year] = dateInTimeZone.split(", ")[0].split("/");
   
-  // Reformat it into a valid YYYY-MM-DD format
+  // Reformat it into a valid YYYY-MM-DD format (without time)
   const formattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
   
-  // Now, make a Date object and ensure it's a proper date value
+  // Now, make a Date object with no time portion
   const row = [
-    new Date(formattedDate),
+    formattedDate,
     scores.userName,
     scores.duration,
     Number(scores.attentionToDetail),
