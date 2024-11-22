@@ -54,7 +54,7 @@ async function writeResultsToGoogleSheets(scores) {
   });
   
   const firstSheet = sheetInfo.data.sheets[0].properties.title;
-
+  const localDate = new Date().toLocaleDateString("en-US", { timeZone: "America/Chicago" });
 
   // Prepare the row data, splitting out the individual question answers into separate columns
   const row = [
