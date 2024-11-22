@@ -54,11 +54,18 @@ async function writeResultsToGoogleSheets(scores) {
   });
   
   const firstSheet = sheetInfo.data.sheets[0].properties.title;
-  const localDate = new Date().toLocaleDateString("en-US", { timeZone: "America/Chicago" });
+// Get current date in 'America/Chicago' time zone
+const dateInTimeZone = new Date().toLocaleString("en-US", { timeZone: "America/Chicago" });
 
-  // Prepare the row data, splitting out the individual question answers into separate columns
-  const row = [
-    new Date(`${localDate}T00:00:00`),
+// Extract the date part (MM/DD/YYYY) and split it
+const [month, day, year] = dateInTimeZone.split(", ")[0].split("/");
+
+// Reformat it into a valid YYYY-MM-DD format
+const formattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+
+// Now create a valid Date object without time (no T00:00:00)
+const row = [
+  formattedDate,
     scores.userName,
     scores.duration,
     Number(scores.attentionToDetail),
