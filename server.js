@@ -54,18 +54,18 @@ async function writeResultsToGoogleSheets(scores) {
   });
   
   const firstSheet = sheetInfo.data.sheets[0].properties.title;
-// Get the current date in your local time zone
-const localDate = new Date(Date.now()).toLocaleDateString("en-US", { timeZone: "America/Chicago" });
+// Get the current date in your local time zone (America/Chicago)
+const localDate = new Date().toLocaleString("en-US", { timeZone: "America/Chicago" });
 
-// Split the date into its components (MM/DD/YYYY)
-const [month, day, year] = localDate.split("/");
+// Convert the local date string back to a Date object in the correct time zone
+const localDateObject = new Date(localDate);
 
-// Create a new Date object in the format YYYY-MM-DD
-const formattedDate = new Date(`${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`);
+// Get the timestamp in milliseconds (Unix timestamp)
+const timestamp = localDateObject.getTime();  // This gives the number of milliseconds since the Unix epoch
 
-// Prepare the row data with the formatted date as a Date object
+// Prepare the row data with the timestamp
 const row = [
-  formattedDate, 
+  timestamp,  
     scores.userName,
     scores.duration,
     Number(scores.attentionToDetail),
