@@ -56,15 +56,18 @@ async function writeResultsToGoogleSheets(scores) {
   const firstSheet = sheetInfo.data.sheets[0].properties.title;
   const dateInTimeZone = new Date().toLocaleString("en-US", { timeZone: "America/Chicago" });
 
-  // Extract the date part (MM/DD/YYYY) and split it
-  const [month, day, year] = dateInTimeZone.split(", ")[0].split("/");
-  
-  // Reformat it into a valid YYYY-MM-DD format (without time)
-  const formattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-  
-  // Now, make a Date object with no time portion
-  const row = [
-    formattedDate,
+// Extract the date part (MM/DD/YYYY) and split it
+const [month, day, year] = dateInTimeZone.split(", ")[0].split("/");
+
+// Reformat it into a valid YYYY-MM-DD format (without time)
+const formattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+
+// Convert formatted date back to Date object (without time)
+const finalDate = new Date(formattedDate);
+
+// Now, make the row with a true Date object, not a string
+const row = [
+  finalDate, 
     scores.userName,
     scores.duration,
     Number(scores.attentionToDetail),
