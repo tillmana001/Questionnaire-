@@ -54,20 +54,20 @@ async function writeResultsToGoogleSheets(scores) {
   });
   
   const firstSheet = sheetInfo.data.sheets[0].properties.title;
-  const dateInTimeZone = new Date().toLocaleString("en-US", { timeZone: "America/Chicago" });
+  const localDate = new Date().toLocaleString("en-US", { timeZone: "America/Chicago" });
 
-// Extract the date part (MM/DD/YYYY) and split it
-const [month, day, year] = dateInTimeZone.split(", ")[0].split("/");
-
-// Reformat it into a valid YYYY-MM-DD format (without time)
-const formattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-
-// Convert formatted date back to Date object (without time)
-const finalDate = new Date(formattedDate);
-
-// Now, make the row with a true Date object, not a string
-const row = [
-  finalDate, 
+  // Extract the date part (MM/DD/YYYY)
+  const [month, day, year] = localDate.split(", ")[0].split("/");
+  
+  // Format the date in YYYY-MM-DD format without time
+  const formattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+  
+  // Convert formatted date to a Date object (without time)
+  const finalDate = new Date(formattedDate);
+  
+  // Prepare the row with the formatted date
+  const row = [
+    finalDate, 
     scores.userName,
     scores.duration,
     Number(scores.attentionToDetail),
