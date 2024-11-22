@@ -58,7 +58,7 @@ async function writeResultsToGoogleSheets(scores) {
 
   // Prepare the row data, splitting out the individual question answers into separate columns
   const row = [
-    new Date(`${localDate}T00:00:00`)
+    new Date(`${localDate}T00:00:00`),
     scores.userName,
     scores.duration,
     Number(scores.attentionToDetail),
