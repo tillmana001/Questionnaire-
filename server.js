@@ -56,10 +56,22 @@ async function writeResultsToGoogleSheets(scores) {
   const firstSheet = sheetInfo.data.sheets[0].properties.title;
   const currentDate = new Date();
 
+  // Format the date in the desired time zone (America/Chicago) and extract only the date
+  const formattedDate = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Chicago",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(currentDate);
+  
+  // Reformat the date to match Google Sheets' expectations (YYYY-MM-DD)
+  const [month, day, year] = formattedDate.split("/");
+  const localDate = `${year}-${month}-${day}`; 
+
 
   // Prepare the row data, splitting out the individual question answers into separate columns
   const row = [
-    currentDate,
+    localDate,
     scores.userName,
     scores.duration,
     Number(scores.attentionToDetail),
