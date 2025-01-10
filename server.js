@@ -68,6 +68,7 @@ const row = [
   timestamp,  
     scores.userName,
     scores.duration,
+    Number(scores.overallScore),
     Number(scores.attentionToDetail),
     Number(scores.continuousLearning),
     Number(scores.communication),
