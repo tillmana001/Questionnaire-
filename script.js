@@ -45,6 +45,7 @@ async function scoreMe() {
   // Initialize results object
   let results = {
     userName: document.getElementById("name").value, // Ensure this matches your HTML ID for the user's name input
+    overallScore: 0, // Placeholder, will calculate and update below
     attentionToDetail: 0,
     continuousLearning: 0,
     communication: 0,
@@ -73,6 +74,16 @@ async function scoreMe() {
       }
     });
   }
+  
+  // Calculate the overall score
+  results.overallScore = 
+    results.attentionToDetail +
+    results.continuousLearning +
+    results.communication +
+    results.integrity +
+    results.reliability +
+    results.teamwork;
+
   const endTime = Date.now();
   const duration = ((endTime - startTime) / 60000).toFixed(2); // Converts milliseconds to minutes with 2 decimal places  
 
